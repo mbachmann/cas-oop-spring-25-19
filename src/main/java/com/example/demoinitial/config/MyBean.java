@@ -1,13 +1,14 @@
 package com.example.demoinitial.config;
 
 import com.example.demoinitial.domain.Person;
+import com.example.demoinitial.utils.HasLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyBean implements CommandLineRunner {
+public class MyBean implements CommandLineRunner, HasLogger {
 
     MyComponent myComponent;
 
@@ -26,8 +27,8 @@ public class MyBean implements CommandLineRunner {
 
     public void run(String[] args) {
         myComponent.hello();
-        System.out.println("getTestValue = " + myComponent.getTestValue());
-        System.out.println("Felix Muster Test " + felixMuster.toString());
-        System.out.println("Max Mustermann Test " + maxMustermann.toString());
+        getLogger().info("getTestValue = " + myComponent.getTestValue());
+        getLogger().debug("Felix Muster Test " + felixMuster.toString());
+        getLogger().debug("Max Mustermann Test " + maxMustermann.toString());
     }
 }
