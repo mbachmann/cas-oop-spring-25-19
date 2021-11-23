@@ -27,11 +27,6 @@ public class DemoInitialApplication implements HasLogger {
         SpringApplication.run(DemoInitialApplication.class, args);
     }
 
-    @RequestMapping("/")
-    @ResponseBody
-    String home() {
-        return "Hello World " + myComponent.getPerson().toString();
-    }
 
     @PostConstruct
     public void afterInit() {
