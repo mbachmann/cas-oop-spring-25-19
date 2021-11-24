@@ -1,4 +1,4 @@
-package com.example.demoinitial.web;
+package com.example.demoinitial.web.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
