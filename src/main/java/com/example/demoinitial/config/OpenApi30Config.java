@@ -25,6 +25,7 @@ public class OpenApi30Config {
         this.moduleName = moduleName;
         this.apiVersion = apiVersion;
     }
+
     @Profile("dev")
     @Bean
     public OpenAPI customOpenAPI(@Value("${app.server}") String contextPath) {

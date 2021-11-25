@@ -4,11 +4,8 @@ import com.example.demoinitial.domain.Person;
 import com.example.demoinitial.domain.dto.PagedPersonsDto;
 import com.example.demoinitial.repository.PersonRepository;
 import com.example.demoinitial.web.exception.PersonNotFoundException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,17 +41,6 @@ public class PersonService {
     public Person updatePerson(Person person, Long id) {
         findById(id).orElseThrow(() -> new PersonNotFoundException("Update not successful: person with id=" + id + " not found"));
         return personRepository.save(person);
-    }
-
-    public Person patchPerson(JsonPatch patch, Long id) throws JsonPatchException, JsonProcessingException {
-        Person person = findById(id).orElseThrow(() -> new PersonNotFoundException("Patch not successful: person with id=" + id + " not found"));
-        Person personPatched = applyPatchToCustomer(patch, person);
-        return personRepository.save(personPatched);
-    }
-
-    private Person applyPatchToCustomer(JsonPatch patch, Person targetPerson) throws JsonPatchException, JsonProcessingException {
-        JsonNode patched = patch.apply(objectMapper.convertValue(targetPerson, JsonNode.class));
-        return objectMapper.treeToValue(patched, Person.class);
     }
 
     public Boolean deletePerson(Long id) {

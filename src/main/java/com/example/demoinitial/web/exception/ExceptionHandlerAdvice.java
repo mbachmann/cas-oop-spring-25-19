@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(PersonNotFoundException.class)
-    public ResponseEntity handleException(PersonNotFoundException e) {
+    public ResponseEntity<String> handleException(PersonNotFoundException e) {
         // log exception
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)

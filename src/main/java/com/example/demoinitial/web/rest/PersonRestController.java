@@ -5,12 +5,8 @@ import com.example.demoinitial.domain.dto.PagedPersonsDto;
 import com.example.demoinitial.service.PersonService;
 import com.example.demoinitial.utils.AppConstants;
 import com.example.demoinitial.web.exception.PersonNotFoundException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/persons")
@@ -75,20 +70,6 @@ public class PersonRestController {
         return ResponseEntity.ok(personService.createPerson(person));
     }
 
-
-    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<Person> patchPerson(@PathVariable Long id,
-                                                   @RequestBody JsonPatch patch) {
-        try {
-            Person personPatched = personService.patchPerson(patch, id);
-            return ResponseEntity.ok(personPatched);
-        } catch (PersonNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> updatePerson(@PathVariable Long id,
                                                @RequestBody Person person) {
@@ -99,6 +80,4 @@ public class PersonRestController {
     public ResponseEntity<Boolean> deletePerson(@PathVariable Long id) {
         return ResponseEntity.ok(personService.deletePerson(id));
     }
-
-
 }
