@@ -22,6 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .mvcMatchers("/").permitAll()
                     .mvcMatchers("/users/**").hasRole("USER")
+                    .mvcMatchers("/stomp-broadcast/**").hasRole("USER")
                     .mvcMatchers("/api/persons/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
