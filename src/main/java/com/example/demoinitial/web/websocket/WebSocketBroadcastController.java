@@ -1,4 +1,4 @@
-package com.example.demoinitial.web.controller;
+package com.example.demoinitial.web.websocket;
 
 import com.example.demoinitial.domain.dto.ChatMessageDto;
 import com.example.demoinitial.utils.HasLogger;
