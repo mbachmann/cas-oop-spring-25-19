@@ -1,6 +1,6 @@
 package com.example.demoinitial.client.websocket;
 
-import com.example.demoinitial.domain.dto.ChatMessageDto;
+import com.example.demoinitial.web.dto.ChatMessageDto;
 import com.example.demoinitial.utils.HasLogger;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;

@@ -1,7 +1,7 @@
 package com.example.demoinitial.service;
 
 import com.example.demoinitial.domain.Person;
-import com.example.demoinitial.domain.dto.PagedPersonsDto;
+import com.example.demoinitial.web.dto.PagedPersonsDto;
 import com.example.demoinitial.repository.PersonRepository;
 import com.example.demoinitial.web.exception.PersonNotFoundException;
 

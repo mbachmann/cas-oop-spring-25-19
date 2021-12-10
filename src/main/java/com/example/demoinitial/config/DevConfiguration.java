@@ -70,15 +70,8 @@ public class DevConfiguration implements HasLogger {
         assignMaxMustermannToDesignProject();
         assignMaxMustermannAsChef();
 
-        createUserData();
-
     }
 
-    private void createUserData() {
-        User user = new User("Felix Muster", "felix.muster@example.com");
-        userRepository.save(user);
-
-    }
 
     private void createPersonData() {
         personRepository.save(felixMuster);

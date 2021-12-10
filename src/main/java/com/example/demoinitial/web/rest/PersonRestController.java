@@ -1,7 +1,7 @@
 package com.example.demoinitial.web.rest;
 
 import com.example.demoinitial.domain.Person;
-import com.example.demoinitial.domain.dto.PagedPersonsDto;
+import com.example.demoinitial.web.dto.PagedPersonsDto;
 import com.example.demoinitial.service.PersonService;
 import com.example.demoinitial.utils.AppConstants;
 import com.example.demoinitial.web.exception.PersonNotFoundException;

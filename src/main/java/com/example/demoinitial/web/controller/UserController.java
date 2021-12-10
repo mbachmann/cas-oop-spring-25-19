@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import com.example.demoinitial.domain.User;
 import com.example.demoinitial.repository.UserRepository;
+import com.example.demoinitial.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
     private final UserRepository userRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/list")
@@ -42,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
             return "add-user";
         }
 
-        userRepository.save(user);
+        userService.registerNewUserAccount(user);
         return "redirect:/users/list";
     }
 
@@ -61,7 +65,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
             return "update-user";
         }
 
-        userRepository.save(user);
+        User loadUser = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        loadUser.setFullName(user.getFullName());
+        loadUser.setEmail(user.getEmail());
+
+        userRepository.save(loadUser);
 
         return "redirect:/users/list";
     }
@@ -69,7 +77,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        userRepository.delete(user);
+        userRepository.deleteById(id);
 
         return "redirect:/users/list";
     }

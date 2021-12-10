@@ -9,10 +9,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(PersonNotFoundException.class)
-    public ResponseEntity<String> handleException(PersonNotFoundException e) {
+    public ResponseEntity<String> handlePersonNotFoundException(PersonNotFoundException e) {
         // log exception
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body("Error: " + e.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<String> handlePersonNotFoundException(UserAlreadyExistException e) {
+        // log exception
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body("Error: " + e.getMessage());
     }
 }

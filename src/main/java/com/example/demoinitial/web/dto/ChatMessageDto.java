@@ -1,4 +1,4 @@
-package com.example.demoinitial.domain.dto;
+package com.example.demoinitial.web.dto;
 
 
 import com.example.demoinitial.utils.StringUtils;
