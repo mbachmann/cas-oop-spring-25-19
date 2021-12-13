@@ -47,6 +47,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setRoles(new HashSet<Role>(Arrays.asList(adminRole, userRole)));
         userRepository.save(user);
 
+        user = new User("user", "admin@admin.ch");
+        user.setPassword(passwordEncoder.encode("admin"));
+        user.setRoles(new HashSet<Role>(Arrays.asList(adminRole, userRole)));
+        userRepository.save(user);
 
         user = new User("user", "user@example.com");
         user.setPassword(passwordEncoder.encode("user"));
