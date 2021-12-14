@@ -21,14 +21,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .mvcMatchers("/").permitAll()
-                    .mvcMatchers("/users/**").hasRole("USER")
-                    .mvcMatchers("/stomp-broadcast/**").hasRole("USER")
-                    .mvcMatchers("/api/persons/**").permitAll()
+                    .mvcMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                    .mvcMatchers("/stomp-broadcast/**").hasAnyRole("USER", "ADMIN")
+                    .mvcMatchers("/api/persons/**").hasAnyRole("USER", "ADMIN")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login")
                     .permitAll()
+                .and()
+                    .httpBasic()
                 .and()
                     .logout()
                     .logoutUrl("/logout")
@@ -51,7 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .passwordEncoder(passwordEncoder())
-                .withUser("user").password(passwordEncoder().encode("user")).roles("USER");
+                .withUser("user").password(passwordEncoder().encode("user")).roles("USER")
+                .and().withUser("admin@example.com").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER")
+                .and().withUser("admin@admin.ch").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER")
+        ;
     }
 
     @Bean
