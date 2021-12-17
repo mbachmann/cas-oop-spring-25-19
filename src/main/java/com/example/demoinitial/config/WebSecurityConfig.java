@@ -138,18 +138,20 @@ public class WebSecurityConfig  {
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
-                    .mvcMatchers("/", "/login").permitAll()
-                    .mvcMatchers("/users/**").hasRole("USER")
-                    .mvcMatchers("/stomp-broadcast/**").hasRole("USER")
-                    .anyRequest().authenticated()
+                        .mvcMatchers("/", "/login").permitAll()
+                        .mvcMatchers("/users/**").hasRole("USER")
+                        .mvcMatchers("/stomp-broadcast/**").hasRole("USER")
+                        .anyRequest().authenticated()
                     .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
+                        .formLogin()
+                        .loginPage("/login")
+                        .permitAll()
                     .and()
-                    .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/");
+                        .httpBasic()
+                    .and()
+                        .logout()
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/");
         }
 
         @Override
