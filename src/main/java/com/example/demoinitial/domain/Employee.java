@@ -1,17 +1,13 @@
 package com.example.demoinitial.domain;
 
-import com.example.demoinitial.domain.listener.LogListener;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -22,7 +18,6 @@ import javax.persistence.OneToOne;
 
 @Entity(name = "Employee")
 @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name")
-// @EntityListeners({LogListener.class})
 public class Employee extends BaseEntity {
 
     private String name;
