@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head th:fragment="headerfiles">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +19,7 @@
         <li class="list-inline-item"><a href="/">Home</a></li>
         <li class="list-inline-item"><a th:href="@{/users/list}" >Users</a></li>
         <li class="list-inline-item"><a th:href="@{/stomp-broadcast}">WebSocket</a></li>
+        <li class="list-inline-item" sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
     </ul>
 </footer>
 </body>
