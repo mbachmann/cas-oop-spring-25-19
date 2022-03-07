@@ -41,6 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(HttpMethod.OPTIONS, "/**")
+                .antMatchers("/js/**")
+                .antMatchers("/css/**")
+                .antMatchers("/webfonts/**")
                 .antMatchers("/h2-console/**")
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/swagger-ui/**")
