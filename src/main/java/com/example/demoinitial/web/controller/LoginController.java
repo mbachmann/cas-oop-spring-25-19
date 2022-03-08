@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class LoginController {
     @GetMapping("/login")
-    public String homePage(Model model) {
+    public String loginPage(Model model) {
         return "login";
     }
 
