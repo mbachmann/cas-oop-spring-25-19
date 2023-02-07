@@ -2,8 +2,8 @@ package com.example.demoinitial.domain;
 
 import com.example.demoinitial.domain.enums.ProjectType;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("QualityProject")

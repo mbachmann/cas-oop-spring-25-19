@@ -1,8 +1,22 @@
 package com.example.demoinitial.config;
 
-import com.example.demoinitial.domain.*;
-import com.example.demoinitial.repository.*;
+import com.example.demoinitial.domain.Address;
+import com.example.demoinitial.domain.Department;
+import com.example.demoinitial.domain.DesignProject;
+import com.example.demoinitial.domain.Employee;
+import com.example.demoinitial.domain.Person;
+import com.example.demoinitial.domain.Phone;
+import com.example.demoinitial.domain.QualityProject;
+import com.example.demoinitial.domain.User;
+import com.example.demoinitial.repository.AddressRepository;
+import com.example.demoinitial.repository.DepartmentRepository;
+import com.example.demoinitial.repository.EmployeeRepository;
+import com.example.demoinitial.repository.PersonRepository;
+import com.example.demoinitial.repository.ProjectRepository;
+import com.example.demoinitial.repository.UserRepository;
 import com.example.demoinitial.utils.HasLogger;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +24,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -75,9 +89,19 @@ public class DevConfiguration implements HasLogger {
     }
 
     private void createUserData() {
-        User user = new User("Felix Muster", "felix.muster@example.com");
-        userRepository.save(user);
+        createUserIfNotFound("Felix Muster", "felix.muster@example.com");
+    }
 
+    @Transactional
+    User createUserIfNotFound(String name, String eMail) {
+
+        Optional<User> user = userRepository.findByEmail(eMail);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            User newUser = new User(name, eMail);
+            return userRepository.save(newUser);
+        }
     }
 
     private void createPersonData() {
