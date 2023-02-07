@@ -3,17 +3,17 @@ package com.example.demoinitial.domain.listener;
 import com.example.demoinitial.domain.Employee;
 
 import java.util.logging.Logger;
-import javax.persistence.PostLoad;
-import javax.persistence.PostPersist;
-import javax.persistence.PostRemove;
-import javax.persistence.PostUpdate;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PostRemove;
+import jakarta.persistence.PostUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 
 public class LogListener {
 
-    private static Logger logger = Logger.getLogger(LogListener.class.toString());
+    private static final Logger logger = Logger.getLogger(LogListener.class.toString());
 
     @PostLoad
     private void postLoad(Object obj) {

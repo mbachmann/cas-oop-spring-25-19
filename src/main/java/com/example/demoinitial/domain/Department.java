@@ -3,15 +3,15 @@ package com.example.demoinitial.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Department extends BaseEntity {
 
     private String name;
     @OneToMany(mappedBy = "department")
-    private Set<Employee> employees = new HashSet<Employee>();
+    private Set<Employee> employees = new HashSet<>();
 
     public String getName() {
         return name;

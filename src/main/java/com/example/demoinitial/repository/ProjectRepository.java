@@ -1,6 +1,5 @@
 package com.example.demoinitial.repository;
 
-import com.example.demoinitial.domain.Department;
 import com.example.demoinitial.domain.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +28,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("select p from Project p left join fetch p.employees where p.id =:id")
     Optional<Project> findByIdWithEagerRelationships(@Param("id") Long id);
-
 
 }
