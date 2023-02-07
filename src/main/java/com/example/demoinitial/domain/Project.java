@@ -1,9 +1,16 @@
 package com.example.demoinitial.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -17,7 +24,7 @@ public abstract class Project extends BaseEntity {
     protected String type;
 
     @ManyToMany
-    private Set<Employee> employees = new HashSet<Employee>();
+    private Set<Employee> employees = new HashSet<>();
 
     public Project(){}
 

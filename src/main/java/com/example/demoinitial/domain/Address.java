@@ -1,6 +1,6 @@
 package com.example.demoinitial.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Address extends BaseEntity {

@@ -1,7 +1,17 @@
 package com.example.demoinitial.config;
 
-import com.example.demoinitial.domain.*;
-import com.example.demoinitial.repository.*;
+import com.example.demoinitial.domain.Address;
+import com.example.demoinitial.domain.Department;
+import com.example.demoinitial.domain.DesignProject;
+import com.example.demoinitial.domain.Employee;
+import com.example.demoinitial.domain.Person;
+import com.example.demoinitial.domain.Phone;
+import com.example.demoinitial.domain.QualityProject;
+import com.example.demoinitial.repository.AddressRepository;
+import com.example.demoinitial.repository.DepartmentRepository;
+import com.example.demoinitial.repository.EmployeeRepository;
+import com.example.demoinitial.repository.PersonRepository;
+import com.example.demoinitial.repository.ProjectRepository;
 import com.example.demoinitial.utils.HasLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,7 +20,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 
 /**
