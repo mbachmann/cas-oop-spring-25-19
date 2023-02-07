@@ -2,7 +2,6 @@
 
 [https://github.zhaw.ch/bacn/cas-oop-spring-23-15](https://github.zhaw.ch/bacn/cas-oop-spring-23-15)
 
-
 ## Branches in this repository
 
 - le04-configuration-magic
