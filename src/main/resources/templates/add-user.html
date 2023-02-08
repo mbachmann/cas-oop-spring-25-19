@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <title>Add User</title>
-  <th:block th:include="fragments/common.html :: headerfiles"> </th:block>
+  <th:block th:insert="~{fragments/common.html :: headerfiles}"> </th:block>
 </head>
 <body>
 <div class="container ">
@@ -32,6 +32,6 @@
     </div>
   </div>
 </div>
-<footer th:insert="fragments/common.html :: footer"></footer>
+<footer th:insert="~{fragments/common.html :: footer}"></footer>
 </body>
 </html>

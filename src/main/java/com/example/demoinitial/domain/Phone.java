@@ -1,7 +1,7 @@
 package com.example.demoinitial.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Phone extends BaseEntity {
