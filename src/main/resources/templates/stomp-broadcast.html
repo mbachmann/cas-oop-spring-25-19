@@ -2,11 +2,9 @@
 <head>
     <title>WebSocket With STOMP Broadcast Example</title>
     <th:block th:insert="~{fragments/common.html :: headerfiles}"> </th:block>
-    <script th:src="@{/js/2.3.3_stomp.js}" ></script>
 </head>
 <body>
 <div class="container">
-    <p class="my-2"><a href="#" th:href="@{/logout}">Log Out</a></p>
     <div class="py-5">
         <a href="/"><h2>WebSocket</h2></a>
         <p class="lead">WebSocket Broadcast - with STOMP</p>
@@ -85,10 +83,12 @@
             alert('Please input a nickname!');
             return;
         }
-        /*<![CDATA[*/
-        var url = /*[['ws://'+${serverName}+':'+${serverPort}+@{/broadcast}]]*/ 'ws://localhost:8080/broadcast';/*]]>*/
-        stompClient = Stomp.client(url);
-        stompClient.connect({}, function () {
+
+        var socket = new SockJS('/broadcast');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/messages', function (output) {
                 showBroadcastMessage(createTextNode(JSON.parse(output.body)));
             });

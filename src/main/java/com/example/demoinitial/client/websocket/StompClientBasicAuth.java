@@ -1,6 +1,7 @@
 package com.example.demoinitial.client.websocket;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -15,7 +16,10 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 /**
  * Stand alone WebSocketStompClient.
  */
-public class StompClientBasicAuth {
+public final class StompClientBasicAuth {
+
+    private StompClientBasicAuth() {
+    }
 
     public static void main(String[] args) {
         WebSocketClient client = new StandardWebSocketClient();
@@ -25,8 +29,8 @@ public class StompClientBasicAuth {
 
         WebSocketHttpHeaders webSocketHeaders = createWebSocketHeaders("admin@example.com", "admin");
         StompSessionHandler sessionHandler = new MyStompSessionHandler();
-        String URL = "ws://localhost:8080/broadcast";
-        stompClient.connect(URL, webSocketHeaders, sessionHandler);
+        String url = "ws://localhost:8080/broadcast";
+        stompClient.connect(url, webSocketHeaders, sessionHandler);
         // Don't close immediately - Type <Enter> to exit
         new Scanner(System.in).nextLine();
     }
@@ -46,7 +50,7 @@ public class StompClientBasicAuth {
 
     private static String getBase64Auth (String username, String password) {
         String auth = username + ":" + password;
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII), false);
 
         return "Basic " + new String(encodedAuth);
     }
