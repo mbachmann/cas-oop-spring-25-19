@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<footer th:insert="~{fragments/common.html :: footer}"></footer>
+<th:block th:insert="~{fragments/common.html :: footer}"></th:block>
 
 
 <script type="text/javascript">
@@ -76,14 +76,15 @@
             $("#sendmessage").hide();
         }
     }
-
     function connect() {
         userName = $("#from").val();
         if (userName == null || userName === "") {
             alert('Please input a nickname!');
             return;
         }
-
+        /*<![CDATA[*/
+        var url = /*[['ws://'+${serverName}+':'+${serverPort}+@{/broadcast}]]*/ 'ws://localhost:8080/broadcast';/*]]>*/
+        /*]]>*/
         var socket = new SockJS('/broadcast');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {

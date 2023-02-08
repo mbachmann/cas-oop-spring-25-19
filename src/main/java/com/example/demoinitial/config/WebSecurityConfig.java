@@ -28,12 +28,13 @@ public class WebSecurityConfig {
     @Order(0)
     SecurityFilterChain resources(HttpSecurity http) throws Exception {
         String[] permitted = new String[]{
-            "/", "/static/**","/css/**","/js/**","/webfonts/**",
+            "/", "/static/**","/css/**","/js/**","/webfonts/**", "/webjars/**",
             "/index.html","/favicon.ico", "/error"
         };
         http
-            .headers().frameOptions().disable().and()
-            .csrf(AbstractHttpConfigurer::disable)
+            //.headers().frameOptions().disable().and()
+            //.csrf().disable()
+            //.csrf(AbstractHttpConfigurer::disable)
             .securityMatcher(permitted)
             /*.securityMatcher("/static/**")
             .securityMatcher("/css/**")
@@ -59,26 +60,26 @@ public class WebSecurityConfig {
 
                     requests
                         .requestMatchers(OPTIONS).permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.GET, "/")).permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.GET, "/users/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.PUT, "/users/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.DELETE, "/users/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.GET, "/")).permitAll()
+                        .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.PUT, "/users/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.DELETE, "/users/**")).hasAnyRole("USER", "ADMIN")
 
-                        .requestMatchers(antMatcher(HttpMethod.GET, "/stomp-broadcast/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.GET, "/broadcast/**")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher("/broadcast/**")).hasAnyRole("USER", "ADMIN")
 
-                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.POST, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.PUT, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher(HttpMethod.DELETE, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.POST, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.PUT, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers(antMatcher(HttpMethod.DELETE, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers(
-                            antMatcher(HttpMethod.GET, "/error"),
-                            antMatcher(HttpMethod.GET, "/login"),
+                            //antMatcher(HttpMethod.GET, "/error"),
+                            //antMatcher(HttpMethod.GET, "/login"),
                             antMatcher("/h2-console/**"),
-                            antMatcher("/index.html"),
-                            antMatcher(HttpMethod.GET, "/favicon.ico"),
+                            //antMatcher("/index.html"),
+                            //antMatcher(HttpMethod.GET, "/favicon.ico"),
                             // regexMatcher(".*\\?x=y")).hasRole("SPECIAL"),
                             antMatcher(HttpMethod.GET, "/v3/**"),
                             antMatcher(HttpMethod.GET, "/swagger-ui.html"),
@@ -91,6 +92,7 @@ public class WebSecurityConfig {
 
         http
             .formLogin(login -> login.loginPage("/login").permitAll())
+            .httpBasic(withDefaults())
             .logout((logout) -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/"));
