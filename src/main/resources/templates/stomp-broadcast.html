@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>WebSocket With STOMP Broadcast Example</title>
-    <th:block th:include="fragments/common.html :: headerfiles"> </th:block>
+    <th:block th:insert="~{fragments/common.html :: headerfiles}"> </th:block>
     <script th:src="@{/js/2.3.3_stomp.js}" ></script>
 </head>
 <body>
@@ -46,7 +46,7 @@
     </div>
 </div>
 
-<footer th:insert="fragments/common.html :: footer"></footer>
+<footer th:insert="~{fragments/common.html :: footer}"></footer>
 
 
 <script type="text/javascript">
@@ -85,8 +85,7 @@
             return;
         }
         /*<![CDATA[*/
-        var url = /*[['ws://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/broadcast}]]*/ 'ws://localhost:8080/broadcast';
-        /*]]>*/
+        var url = /*[['ws://'+${serverName}+':'+${serverPort}+@{/broadcast}]]*/ 'ws://localhost:8080/broadcast';/*]]>*/
         stompClient = Stomp.client(url);
         stompClient.connect({}, function () {
             stompClient.subscribe('/topic/messages', function (output) {
