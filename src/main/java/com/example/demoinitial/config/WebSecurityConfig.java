@@ -7,7 +7,6 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,21 +26,13 @@ public class WebSecurityConfig {
     @Bean
     @Order(0)
     SecurityFilterChain resources(HttpSecurity http) throws Exception {
-        String[] permitted = new String[]{
+        String[] permittedResources = new String[] {
             "/", "/static/**","/css/**","/js/**","/webfonts/**", "/webjars/**",
-            "/index.html","/favicon.ico", "/error"
+            "/index.html","/favicon.ico", "/error",
+            "/v3/**","/swagger-ui.html","/swagger-ui/**"
         };
         http
-            //.headers().frameOptions().disable().and()
-            //.csrf().disable()
-            //.csrf(AbstractHttpConfigurer::disable)
-            .securityMatcher(permitted)
-            /*.securityMatcher("/static/**")
-            .securityMatcher("/css/**")
-            .securityMatcher("/js/**")
-            .securityMatcher("/webfonts/**")
-            .securityMatcher("/index.html")
-            .securityMatcher("/favicon.ico")*/
+            .securityMatcher(permittedResources)
             .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
             .requestCache().disable()
             .securityContext().disable()
@@ -60,33 +51,12 @@ public class WebSecurityConfig {
 
                     requests
                         .requestMatchers(OPTIONS).permitAll()
-                        //.requestMatchers(antMatcher(HttpMethod.GET, "/")).permitAll()
                         .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher(HttpMethod.PUT, "/users/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher(HttpMethod.DELETE, "/users/**")).hasAnyRole("USER", "ADMIN")
-
                         .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher("/broadcast/**")).hasAnyRole("USER", "ADMIN")
-
                         .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher(HttpMethod.POST, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher(HttpMethod.PUT, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers(antMatcher(HttpMethod.DELETE, "/api/persons/**")).hasAnyRole("USER", "ADMIN")
-
-                        .requestMatchers(
-                            //antMatcher(HttpMethod.GET, "/error"),
-                            //antMatcher(HttpMethod.GET, "/login"),
-                            antMatcher("/h2-console/**"),
-                            //antMatcher("/index.html"),
-                            //antMatcher(HttpMethod.GET, "/favicon.ico"),
-                            // regexMatcher(".*\\?x=y")).hasRole("SPECIAL"),
-                            antMatcher(HttpMethod.GET, "/v3/**"),
-                            antMatcher(HttpMethod.GET, "/swagger-ui.html"),
-                            antMatcher(HttpMethod.GET, "/swagger-ui/**")).permitAll()
+                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                         .anyRequest()
                         .authenticated();
-
                 }
             );
 
@@ -107,20 +77,6 @@ public class WebSecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-
-    /**
-     * webSecurityCustomizer does not use the filter chain. Spring Boot produces a warning: You are asking Spring Security to ignore Ant [pattern='/js/**', GET]. T his is not recommended -- please use
-     * permitAll via HttpSecurity#authorizeHttpRequests instead.
-     *
-     * @return
-     */
-    /* @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-            .requestMatchers(antMatcher(HttpMethod.GET, ("/js/**")))
-            .requestMatchers(antMatcher(HttpMethod.GET, ("/css/**")))
-            .requestMatchers(antMatcher(HttpMethod.GET, ("/webfonts/**")));
-    }*/
     @Bean
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -135,4 +91,20 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /**
+     * webSecurityCustomizer does not use the filter chain. Spring Boot produces a warning:
+     * You are asking Spring Security to ignore Ant [pattern='/js/**', GET].
+     * This is not recommended -- please use
+     * permitAll via HttpSecurity#authorizeHttpRequests instead.
+     *
+     * @return
+     */
+    /* @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+            .requestMatchers(antMatcher(HttpMethod.GET, ("/js/**")))
+            .requestMatchers(antMatcher(HttpMethod.GET, ("/css/**")))
+            .requestMatchers(antMatcher(HttpMethod.GET, ("/webfonts/**")));
+    }*/
 }
