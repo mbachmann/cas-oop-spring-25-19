@@ -2,6 +2,7 @@ package com.example.demoinitial.client.resttemplate;
 
 import com.example.demoinitial.domain.Person;
 import com.example.demoinitial.utils.HasLogger;
+import java.nio.charset.StandardCharsets;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,8 +19,7 @@ import java.nio.charset.Charset;
  */
 public class RestClientBasicAuth implements HasLogger {
     public static void main(String[] args) {
-        System.out.println("Basic Auth is not supported -> use JWT Auth");
-        //new RestClientBasicAuth().start();
+        new RestClientBasicAuth().start();
     }
     public void start() {
         final String uri = "http://localhost:8080/api/persons/1";
@@ -34,7 +34,7 @@ public class RestClientBasicAuth implements HasLogger {
         return new HttpHeaders() {{
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(
-                    auth.getBytes(Charset.forName("US-ASCII")) );
+                    auth.getBytes(StandardCharsets.US_ASCII),false );
             String authHeader = "Basic " + new String( encodedAuth );
             set( "Authorization", authHeader );
         }};

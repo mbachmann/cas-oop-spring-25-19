@@ -6,18 +6,19 @@ import org.hibernate.annotations.LazyCollectionOption;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 
 @Entity(name = "Employee")
 @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name")
+// @EntityListeners({LogListener.class})
 public class Employee extends BaseEntity {
 
     private String name;
@@ -57,8 +58,9 @@ public class Employee extends BaseEntity {
         this.salary = salary;
     }
 
+    @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(this.getClass().getName());
         sb.append(" id: ");
         sb.append(this.id);

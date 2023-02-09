@@ -1,188 +1,90 @@
 package com.example.demoinitial.config;
 
-import com.example.demoinitial.auth.StatelessAuthenticationFilter;
-import com.example.demoinitial.auth.StatelessLoginFilter;
-import com.example.demoinitial.auth.TokenAuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig  {
+public class WebSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-    private final TokenAuthenticationService tokenAuthenticationService;
+    @Bean
+    @Order(0)
+    SecurityFilterChain resources(HttpSecurity http) throws Exception {
+        String[] permittedResources = new String[] {
+            "/", "/static/**","/css/**","/js/**","/webfonts/**", "/webjars/**",
+            "/index.html","/favicon.ico", "/error",
+            "/v3/**","/swagger-ui.html","/swagger-ui/**"
+        };
+        http
+            .securityMatcher(permittedResources)
+            .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
+            .requestCache().disable()
+            .securityContext().disable()
+            .sessionManagement().disable();
 
-   @Autowired
-   public WebSecurityConfig(@Qualifier("appUserDetailsServiceImpl") UserDetailsService userDetailsService,
-                            @Value("${hellorest.auth.secret:secretkey}") String secretKey,
-                            @Value("${hellorest.auth.headername:xauth}") TokenAuthenticationService.AuthHeaderName  authHeaderName) {
-
-     //   super(true);
-        this.userDetailsService = userDetailsService;
-        tokenAuthenticationService = new TokenAuthenticationService(authHeaderName, secretKey, userDetailsService);
-   }
-
-    @Configuration
-    @Order(1)
-    public class JwtRestApiSecurityConfig extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable();
-
-            //h2 database console
-            http.headers().frameOptions().disable()
-                    .and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-            http.exceptionHandling()
-                    .and().anonymous()
-                    .and().servletApi()
-                    .and().headers().cacheControl();
-
-            http.antMatcher("/api/**").authorizeRequests()
-                    .antMatchers("/api/login", "/api/authenticate").permitAll()
-                    .antMatchers("/api/persons/**").hasAnyRole("USER", "ADMIN")
-                    .antMatchers(HttpMethod.GET, "/h2-console/**").permitAll();
-
-            http.addFilterBefore(
-                    new StatelessLoginFilter("/api/login", tokenAuthenticationService, userDetailsService, authenticationManager()),
-                    UsernamePasswordAuthenticationFilter.class);
-
-            http.addFilterBefore(
-                    new StatelessAuthenticationFilter(tokenAuthenticationService),
-                    UsernamePasswordAuthenticationFilter.class);
-        }
-
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring()
-                    .antMatchers(HttpMethod.OPTIONS, "/**")
-                    .antMatchers("/js/**")
-                    .antMatchers("/css/**")
-                    .antMatchers("/webfonts/**")
-                    .antMatchers("/h2-console/**")
-                    .antMatchers("/swagger-ui.html")
-                    .antMatchers("/swagger-ui/**")
-                    .antMatchers("/v3/**");
-
-        }
-
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService);
-            //auth.inMemoryAuthentication()
-            //        .passwordEncoder(passwordEncoder())
-            //        .withUser("user").password(passwordEncoder().encode("user")).roles("USER");
-        }
-
-        @Override
-        protected UserDetailsService userDetailsService() {
-            return userDetailsService;
-        }
-
-        @Bean
-        @Override
-        public AuthenticationManager authenticationManagerBean() throws Exception {
-            return super.authenticationManagerBean();
-        }
-
-        @Bean
-        public TokenAuthenticationService tokenAuthenticationService() {
-            return tokenAuthenticationService;
-        }
-
-        @Bean
-        public CorsFilter corsFilter() {
-            final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            final CorsConfiguration config = new CorsConfiguration();
-            config.setAllowCredentials(false);
-            config.addAllowedOrigin("*");
-            config.addAllowedHeader("Authorization");
-            config.addAllowedHeader("X-AUTH-TOKEN");
-            config.addAllowedHeader("Content-Type");
-            config.addAllowedMethod("OPTIONS");
-            config.addAllowedMethod("GET");
-            config.addAllowedMethod("POST");
-            config.addAllowedMethod("PUT");
-            config.addAllowedMethod("DELETE");
-            config.addAllowedMethod("PATCH");
-            source.registerCorsConfiguration("/**", config);
-            return new CorsFilter(source);
-        }
+        return http.build();
     }
 
-    @Configuration
-    @Order(2)
-    public class WebMvcSecurityConfig extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                        .mvcMatchers("/", "/login").permitAll()
-                        .mvcMatchers("/users/**").hasRole("USER")
-                        .mvcMatchers("/stomp-broadcast/**").hasRole("USER")
-                        .anyRequest().authenticated()
-                    .and()
-                        .formLogin()
-                        .loginPage("/login")
-                        .permitAll()
-                    .and()
-                        .httpBasic()
-                    .and()
-                        .logout()
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/");
-        }
+    @Bean
+    @Order(1)
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .headers().frameOptions().disable().and()
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests((requests) -> {
 
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring()
-                    .antMatchers(HttpMethod.OPTIONS, "/**")
-                    .antMatchers("/js/**")
-                    .antMatchers("/css/**")
-                    .antMatchers("/webfonts/**")
-                    .antMatchers("/h2-console/**")
-                    .antMatchers("/swagger-ui.html")
-                    .antMatchers("/swagger-ui/**")
-                    .antMatchers("/v3/**");
-        }
+                    requests
+                        .requestMatchers(OPTIONS).permitAll()
+                        .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                        .anyRequest()
+                        .authenticated();
+                }
+            );
 
+        http
+            .formLogin(login -> login.loginPage("/login").permitAll())
+            .httpBasic(withDefaults())
+            .logout((logout) -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/"));
 
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService);
-            //auth.inMemoryAuthentication()
-            //        .passwordEncoder(passwordEncoder())
-            //        .withUser("user").password(passwordEncoder().encode("user")).roles("USER");
-        }
+        http.headers(headers -> headers.frameOptions().sameOrigin());
 
-        @Override
-        protected UserDetailsService userDetailsService() {
-            return userDetailsService;
-        }
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("user").password(passwordEncoder().encode("user")).roles("USER").build());
+        manager.createUser(User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
+        manager.createUser(User.withUsername("admin@example.com").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
+        manager.createUser(User.withUsername("admin@admin.ch").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
+        return manager;
     }
 
     @Bean
@@ -190,4 +92,19 @@ public class WebSecurityConfig  {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * webSecurityCustomizer does not use the filter chain. Spring Boot produces a warning:
+     * You are asking Spring Security to ignore Ant [pattern='/js/**', GET].
+     * This is not recommended -- please use
+     * permitAll via HttpSecurity#authorizeHttpRequests instead.
+     *
+     * @return
+     */
+    /* @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+            .requestMatchers(antMatcher(HttpMethod.GET, ("/js/**")))
+            .requestMatchers(antMatcher(HttpMethod.GET, ("/css/**")))
+            .requestMatchers(antMatcher(HttpMethod.GET, ("/webfonts/**")));
+    }*/
 }

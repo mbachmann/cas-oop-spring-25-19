@@ -2,16 +2,21 @@ package com.example.demoinitial.web.websocket;
 
 import com.example.demoinitial.web.dto.ChatMessageDto;
 import com.example.demoinitial.utils.HasLogger;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WebSocketBroadcastController implements HasLogger {
 
     @GetMapping("/stomp-broadcast")
-    public String getWebSocketBroadcast() {
+    public String getWebSocketBroadcast(Model model,HttpServletRequest request) {
+        model.addAttribute("servletPath", request.getServletPath());
+        model.addAttribute("serverName", request.getServerName());
+        model.addAttribute("serverPort", request.getServerPort());
         return "stomp-broadcast";
     }
 

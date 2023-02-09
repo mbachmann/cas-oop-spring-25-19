@@ -1,6 +1,6 @@
 package com.example.demoinitial.web.controller;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.example.demoinitial.domain.User;
 import com.example.demoinitial.repository.UserRepository;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path="/users")
-        public class UserController {
+public class UserController {
 
     private final UserRepository userRepository;
 

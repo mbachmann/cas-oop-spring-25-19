@@ -1,125 +1,61 @@
 package com.example.demoinitial.domain;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+@Table(name = "users", // h2 does not accept a table user
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+    })
 @Entity
-@Table( name="user" )
-public class User extends BaseEntity {
+public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotBlank(message = "Name is mandatory")
+    private String name;
 
-	@Column( unique=true, nullable=false )
-	private String email;
+    @NotBlank(message = "Email is mandatory")
+    private String email;
 
-	@Column( nullable=false )
-	private String password;
+    public User() {}
 
-	private String fullName;
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
-	public boolean accountNonExpired;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public boolean accountNonLocked;
+    public Long getId() {
+        return id;
+    }
 
-	public boolean credentialsNonExpired;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean enabled;
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	@ManyToMany( cascade = CascadeType.REFRESH, fetch = FetchType.EAGER )
-	@JoinTable(
-			name = "user_role",
-			joinColumns = {@JoinColumn(name="user_id")},
-			inverseJoinColumns = {@JoinColumn(name="role_id")}
-	)
-	private Set<Role> roles = new HashSet<Role>();
+    public String getName() {
+        return name;
+    }
 
-	public User() {}
+    public String getEmail() {
+        return email;
+    }
 
-	public User(String fullName, String email) {
-		this.fullName = fullName;
-		this.email = email;
-		this.enabled = true;
-		this.accountNonLocked = true;
-		this.credentialsNonExpired = true;
-		this.accountNonExpired = true;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
-	public boolean isAccountNonExpired() {
-		return accountNonExpired;
-	}
-
-	public void setAccountNonExpired(boolean accountNonExpired) {
-		this.accountNonExpired = accountNonExpired;
-	}
-
-	public boolean isAccountNonLocked() {
-		return accountNonLocked;
-	}
-
-	public void setAccountNonLocked(boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
-	}
-
-	public boolean isCredentialsNonExpired() {
-		return credentialsNonExpired;
-	}
-
-	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-		this.credentialsNonExpired = credentialsNonExpired;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", name=" + name + ", email=" + email + '}';
+    }
 }

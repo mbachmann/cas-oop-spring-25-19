@@ -1,6 +1,6 @@
 package com.example.demoinitial.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Address extends BaseEntity {
@@ -9,7 +9,6 @@ public class Address extends BaseEntity {
     private String city;
     private String state;
     private String zip;
-
 
     public String getStreet() {
         return street;
