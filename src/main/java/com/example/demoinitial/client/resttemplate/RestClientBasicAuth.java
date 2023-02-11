@@ -10,10 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.Charset;
-
-
-
 /**
  * Backend must be running
  */
@@ -24,7 +20,7 @@ public class RestClientBasicAuth implements HasLogger {
     public void start() {
         final String uri = "http://localhost:8080/api/persons/1";
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> request = new HttpEntity<String>(createHeaders("admin@example.com", "admin"));
+        HttpEntity<String> request = new HttpEntity<String>(createHeaders("admin", "admin"));
         ResponseEntity<Person> response = restTemplate.exchange(uri, HttpMethod.GET, request, Person.class);
         Person person = response.getBody();
         getLogger().info(person.toString());

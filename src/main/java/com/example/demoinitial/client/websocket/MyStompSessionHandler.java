@@ -1,6 +1,6 @@
 package com.example.demoinitial.client.websocket;
 
-import com.example.demoinitial.web.dto.ChatMessageDto;
+import com.example.demoinitial.web.api.request.ChatMessageRequest;
 import com.example.demoinitial.utils.HasLogger;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -33,12 +33,12 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter implements
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return ChatMessageDto.class;
+        return ChatMessageRequest.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        ChatMessageDto msg = (ChatMessageDto) payload;
+        ChatMessageRequest msg = (ChatMessageRequest) payload;
         getLogger().info("Received : " + msg.getText() + " from : " + msg.getFrom());
     }
 
@@ -46,8 +46,8 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter implements
      * A sample message instance.
      * @return instance of <code>Message</code>
      */
-    private ChatMessageDto getSampleMessage() {
-        ChatMessageDto msg = new ChatMessageDto();
+    private ChatMessageRequest getSampleMessage() {
+        ChatMessageRequest msg = new ChatMessageRequest();
         msg.setFrom("JavaStompClient");
         msg.setText("Here I am!!");
         return msg;

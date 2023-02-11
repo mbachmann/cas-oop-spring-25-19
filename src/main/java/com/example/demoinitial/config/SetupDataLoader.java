@@ -1,18 +1,22 @@
+
 package com.example.demoinitial.config;
 
 import com.example.demoinitial.domain.Role;
 import com.example.demoinitial.domain.User;
+import com.example.demoinitial.domain.enums.ERole;
 import com.example.demoinitial.repository.RoleRepository;
 import com.example.demoinitial.repository.UserRepository;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.HashSet;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -25,7 +29,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private RoleRepository roleRepository;
 
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -33,42 +36,62 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if (alreadySetup)
+        if (alreadySetup) {
             return;
+        }
 
-        createRoleIfNotFound("ROLE_ADMIN");
-        createRoleIfNotFound("ROLE_USER");
+        Role role = createRoleIfNotFound(ERole.ROLE_ADMIN);
+        role = createRoleIfNotFound(ERole.ROLE_USER);
+        role = createRoleIfNotFound(ERole.ROLE_MODERATOR);
 
-        Role adminRole = roleRepository.findByRole("ROLE_ADMIN");
-        Role userRole = roleRepository.findByRole("ROLE_USER");
+        Role adminRole = null;
+        try {
+            adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() ->
+                new Exception("adminRole not found")
+            );
 
-        User user = new User("admin", "admin@example.com");
-        user.setPassword(passwordEncoder.encode("admin"));
-        user.setRoles(new HashSet<Role>(Arrays.asList(adminRole, userRole)));
-        userRepository.save(user);
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() ->
+                new Exception("userRole not found")
+            );
+            Role moderatorRole = roleRepository.findByName(ERole.ROLE_MODERATOR).orElseThrow(() ->
+                new Exception("moderatorRole not found")
+            );
 
-        user = new User("user", "user@user.ch");
-        user.setPassword(passwordEncoder.encode("admin"));
-        user.setRoles(new HashSet<Role>(Arrays.asList(adminRole, userRole)));
-        userRepository.save(user);
+            User user = createUserIfNotFound("admin", "admin@example.com",
+                "admin", new HashSet<>(Arrays.asList(adminRole, userRole, moderatorRole)));
 
-        user = new User("user", "user@example.com");
-        user.setPassword(passwordEncoder.encode("user"));
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-        userRepository.save(user);
+            user = createUserIfNotFound("user", "user@example.com",
+                "user", new HashSet<>(Collections.singletonList(userRole)));
 
-        alreadySetup = true;
+            user = createUserIfNotFound("moderator", "moderator@example.com",
+                "moderator", new HashSet<>(Arrays.asList(userRole, moderatorRole)));
+
+            alreadySetup = true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @Transactional
+    Role createRoleIfNotFound(ERole roleName) {
+        Optional<Role> role = roleRepository.findByName(roleName);
+        if (role.isPresent()) {
+            return role.get();
+        } else {
+            Role newRole = new Role(roleName);
+            return roleRepository.save(newRole);
+        }
+    }
 
     @Transactional
-    Role createRoleIfNotFound(String roleName) {
+    User createUserIfNotFound(String userName, String eMail, String password, Set<Role> roleNames) {
 
-        Role role = roleRepository.findByRole(roleName);
-        if (role == null) {
-            role = new Role(roleName);
-            roleRepository.save(role);
+        Optional<User> user = userRepository.findByUsername(userName);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            User newUser = new User(userName, eMail, passwordEncoder.encode(password), roleNames);
+            return userRepository.save(newUser);
         }
-        return role;
     }
 }

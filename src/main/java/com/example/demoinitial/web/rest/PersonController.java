@@ -1,7 +1,7 @@
 package com.example.demoinitial.web.rest;
 
 import com.example.demoinitial.domain.Person;
-import com.example.demoinitial.web.dto.PagedPersonsDto;
+import com.example.demoinitial.web.api.response.PagedPersonsResponse;
 import com.example.demoinitial.service.PersonService;
 import com.example.demoinitial.utils.AppConstants;
 import com.example.demoinitial.web.exception.PersonNotFoundException;
@@ -25,12 +25,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/api/persons"})
-public class PersonRestController {
+public class PersonController {
     private final PersonService personService;
 
 
     @Autowired
-    public PersonRestController(PersonService personService) {
+    public PersonController(PersonService personService) {
         this.personService = personService;
     }
 
@@ -40,7 +40,7 @@ public class PersonRestController {
     }
 
     @GetMapping("/paged")
-    public PagedPersonsDto getPersonsPaged(
+    public PagedPersonsResponse getPersonsPaged(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
@@ -58,7 +58,7 @@ public class PersonRestController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public List<Person> getPersons() {
         return personService.getAllPersons();
     }

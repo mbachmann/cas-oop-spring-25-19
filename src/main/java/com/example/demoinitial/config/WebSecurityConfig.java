@@ -4,24 +4,69 @@ import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+import com.example.demoinitial.security.AuthEntryPointJwt;
+import com.example.demoinitial.security.AuthTokenFilter;
+import com.example.demoinitial.security.JwtUtils;
+import com.example.demoinitial.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(
+    // securedEnabled = true,
+    // jsr250Enabled = true,
+    prePostEnabled = true)
 public class WebSecurityConfig {
+
+    private final UserDetailsServiceImpl userDetailsService;
+
+    private final AuthEntryPointJwt unauthorizedHandler;
+
+    private final JwtUtils jwtUtils;
+
+    @Autowired
+    public WebSecurityConfig (UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler, JwtUtils jwtUtils) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.jwtUtils = jwtUtils;
+    }
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
 
     @Bean
     @Order(0)
@@ -40,20 +85,42 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
     @Bean
     @Order(1)
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
         http
+            //.cors().and()  // uncomment this line with CorsConfigurationSource, comment this line with CorsFilter
             .headers().frameOptions().disable().and()
             .csrf(AbstractHttpConfigurer::disable)
+            .securityMatcher("/api/**")
+            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers(OPTIONS).permitAll()
+                .requestMatchers(antMatcher("/api/auth/**")).permitAll()
+                .requestMatchers(antMatcher("/api/test/**")).permitAll()
+                .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.GET, "/actuator/**")).permitAll()
+                .requestMatchers(
+                    antMatcher( "/h2-console/**")).permitAll()
+            ).authenticationProvider(authenticationProvider())
+            .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+    @Bean
+    @Order(2)
+    protected SecurityFilterChain mvcFilterChain(HttpSecurity http) throws Exception {
+        http
+            .headers().frameOptions().disable().and()
+            .csrf().disable()
             .authorizeHttpRequests((requests) -> {
 
                     requests
                         .requestMatchers(OPTIONS).permitAll()
-                        .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
+                        .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
+                        .requestMatchers(antMatcher("/broadcast/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
                         .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                         .anyRequest()
                         .authenticated();
@@ -68,23 +135,9 @@ public class WebSecurityConfig {
                 .logoutSuccessUrl("/"));
 
         http.headers(headers -> headers.frameOptions().sameOrigin());
+        http.authenticationProvider(authenticationProvider());
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user").password(passwordEncoder().encode("user")).roles("USER").build());
-        manager.createUser(User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
-        manager.createUser(User.withUsername("admin@example.com").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
-        manager.createUser(User.withUsername("admin@admin.ch").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
-        return manager;
     }
 
     @Bean

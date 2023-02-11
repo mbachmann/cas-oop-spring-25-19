@@ -1,7 +1,8 @@
 package com.example.demoinitial.web.websocket;
 
-import com.example.demoinitial.web.dto.ChatMessageDto;
+import com.example.demoinitial.web.api.request.ChatMessageRequest;
 import com.example.demoinitial.utils.HasLogger;
+import com.example.demoinitial.web.api.response.ChatMessageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -22,8 +23,8 @@ public class WebSocketBroadcastController implements HasLogger {
 
     @MessageMapping("/broadcast")
     @SendTo("/topic/messages")
-    public ChatMessageDto send(ChatMessageDto chatMessage) throws Exception {
-        getLogger().info("Broadcast Message Received : " + chatMessage.getText());
-        return new ChatMessageDto(chatMessage.getFrom(), chatMessage.getText(), "ALL");
+    public ChatMessageResponse send(ChatMessageRequest chatMessageRequest) {
+        getLogger().info("Broadcast Message Received : " + chatMessageRequest.getText());
+        return new ChatMessageResponse(chatMessageRequest.getFrom(), chatMessageRequest.getText(), "ALL");
     }
 }

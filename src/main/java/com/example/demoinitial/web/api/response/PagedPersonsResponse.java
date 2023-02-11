@@ -1,10 +1,10 @@
-package com.example.demoinitial.web.dto;
+package com.example.demoinitial.web.api.response;
 
 import com.example.demoinitial.domain.Person;
 
 import java.util.List;
 
-public class PagedPersonsDto {
+public class PagedPersonsResponse {
     private List<Person> content;
     private int pageNo;
     private int pageSize;
