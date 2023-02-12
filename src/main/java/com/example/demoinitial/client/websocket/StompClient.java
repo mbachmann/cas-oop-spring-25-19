@@ -32,7 +32,7 @@ public final class StompClient {
 
         StompSessionHandler sessionHandler = new MyStompSessionHandler();
         String url = "ws://localhost:8080/broadcast";
-        stompClient.connect(url, sessionHandler);
+        stompClient.connectAsync(url, sessionHandler);
         // Don't close immediately - Type <Enter> to exit
         new Scanner(System.in).nextLine();
     }
