@@ -1,18 +1,18 @@
-package com.example.demoinitial.domain.dto;
+package com.example.demoinitial.web.api.response;
 
 
 import com.example.demoinitial.utils.StringUtils;
 
-public class ChatMessageDto {
+public class ChatMessageResponse {
 
     private String from;
     private String text;
     private String recipient;
     private String time;
 
-    public ChatMessageDto() {}
+    public ChatMessageResponse() {}
 
-    public ChatMessageDto(String from, String text, String recipient) {
+    public ChatMessageResponse(String from, String text, String recipient) {
         this.from = from;
         this.text = text;
         this.recipient = recipient;

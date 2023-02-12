@@ -16,7 +16,6 @@ import com.example.demoinitial.repository.ProjectRepository;
 import com.example.demoinitial.repository.UserRepository;
 import com.example.demoinitial.utils.HasLogger;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -89,17 +88,17 @@ public class DevConfiguration implements HasLogger {
     }
 
     private void createUserData() {
-        createUserIfNotFound("Felix Muster", "felix.muster@example.com");
+        createUserIfNotFound("Felix Muster", "felix.muster@example.com", "felix");
     }
 
     @Transactional
-    User createUserIfNotFound(String name, String eMail) {
+    User createUserIfNotFound(String name, String eMail, String password) {
 
         Optional<User> user = userRepository.findByEmail(eMail);
         if (user.isPresent()) {
             return user.get();
         } else {
-            User newUser = new User(name, eMail);
+            User newUser = new User(name, eMail, password);
             return userRepository.save(newUser);
         }
     }
