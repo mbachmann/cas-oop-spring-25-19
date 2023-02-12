@@ -36,7 +36,7 @@ public final class StompClientBasicAuth {
         StompHeaders stompHeaders = createStompHeaders("admin@example.com", "admin");
         StompSessionHandler sessionHandler = new MyStompSessionHandler();
         String url = "ws://localhost:8080/broadcast";
-        stompClient.connect(url, webSocketHeaders, stompHeaders, sessionHandler);
+        stompClient.connectAsync(url, webSocketHeaders, stompHeaders, sessionHandler);
         // Don't close immediately - Type <Enter> to exit
         new Scanner(System.in).nextLine();
     }
