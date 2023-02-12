@@ -1,7 +1,7 @@
 package com.example.demoinitial.service;
 
 import com.example.demoinitial.domain.Person;
-import com.example.demoinitial.domain.dto.PagedPersonsDto;
+import com.example.demoinitial.web.api.response.PagedPersonsResponse;
 import com.example.demoinitial.repository.PersonRepository;
 import com.example.demoinitial.web.exception.PersonNotFoundException;
 
@@ -49,7 +49,7 @@ public class PersonService {
         return true;
     }
 
-    public PagedPersonsDto getAllPersons(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public PagedPersonsResponse getAllPersons(int pageNo, int pageSize, String sortBy, String sortDir) {
 
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -62,15 +62,15 @@ public class PersonService {
         // get content for page object
         List<Person> content = persons.getContent();
 
-        PagedPersonsDto pagedPersonsDto = new PagedPersonsDto();
-        pagedPersonsDto.setContent(content);
-        pagedPersonsDto.setPageNo(persons.getNumber());
-        pagedPersonsDto.setPageSize(persons.getSize());
-        pagedPersonsDto.setTotalElements(persons.getTotalElements());
-        pagedPersonsDto.setTotalPages(persons.getTotalPages());
-        pagedPersonsDto.setLast(persons.isLast());
+        PagedPersonsResponse pagedPersonsResponse = new PagedPersonsResponse();
+        pagedPersonsResponse.setContent(content);
+        pagedPersonsResponse.setPageNo(persons.getNumber());
+        pagedPersonsResponse.setPageSize(persons.getSize());
+        pagedPersonsResponse.setTotalElements(persons.getTotalElements());
+        pagedPersonsResponse.setTotalPages(persons.getTotalPages());
+        pagedPersonsResponse.setLast(persons.isLast());
 
-        return pagedPersonsDto;
+        return pagedPersonsResponse;
     }
 
     public List<Person> getAllPersons(String firstName, String lastName) {

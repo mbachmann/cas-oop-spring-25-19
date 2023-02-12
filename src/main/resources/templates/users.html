@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Users</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Users</title>
     <th:block th:insert="~{fragments/common.html :: headerfiles}"> </th:block>
 </head>
 <body>
 <div class="container">
+  <p class="my-2"><a href="#" th:href="@{/logout}">Log Out</a></p>
     <div class="py-5">
         <a><h2>Users</h2></a>
         <p class="lead">CRUD Example with Thymeleaf</p>
@@ -18,7 +23,7 @@
                     <table class="table table-striped table-responsive-md">
                         <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>User Name</th>
                             <th>Email</th>
                             <th>Edit</th>
                             <th>Delete</th>
@@ -26,7 +31,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="user : ${users}">
-                            <td th:text="${user.name}"></td>
+                            <td th:text="${user.username}"></td>
                             <td th:text="${user.email}"></td>
                             <td><a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-primary"><i
                                     class="fas fa-user-edit ml-2"></i></a></td>
