@@ -93,7 +93,7 @@ public class DevConfiguration implements HasLogger {
     }
 
     @Transactional
-    User createUserIfNotFound(String name, String eMail, String password) {
+    public User createUserIfNotFound(String name, String eMail, String password) {
 
         Optional<User> user = userRepository.findByEmail(eMail);
         if (user.isPresent()) {
