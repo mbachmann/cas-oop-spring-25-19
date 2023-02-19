@@ -3,7 +3,6 @@ package com.example.demoinitial.client.websocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -21,7 +20,6 @@ public final class StompClient {
 
     private StompClient() {
     }
-
 
     public static void main(String[] args) {
         List<Transport> transports = new ArrayList<>(1);

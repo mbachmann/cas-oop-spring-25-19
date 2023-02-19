@@ -73,7 +73,7 @@ public class PersonController {
         return ResponseEntity.created(location).build();
     }
 
-    @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = {"","/","/new"}, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> newTodoItem(@RequestBody Person person) {
         return ResponseEntity.ok(personService.createPerson(person));
     }
@@ -84,7 +84,7 @@ public class PersonController {
         return ResponseEntity.ok(personService.updatePerson(person, id));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping({"/{id}","/delete/{id}"})
     public ResponseEntity<Boolean> deletePerson(@PathVariable Long id) {
         return ResponseEntity.ok(personService.deletePerson(id));
     }
