@@ -1,7 +1,7 @@
 package com.example.demoinitial.web.rest;
 
 import com.example.demoinitial.domain.Person;
-import com.example.demoinitial.domain.dto.PagedPersonsDto;
+import com.example.demoinitial.web.api.response.PagedPersonsResponse;
 import com.example.demoinitial.service.PersonService;
 import com.example.demoinitial.utils.AppConstants;
 import com.example.demoinitial.web.exception.PersonNotFoundException;
@@ -40,7 +40,7 @@ public class PersonController {
     }
 
     @GetMapping("/paged")
-    public PagedPersonsDto getPersonsPaged(
+    public PagedPersonsResponse getPersonsPaged(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
