@@ -1,7 +1,6 @@
 package com.example.demoinitial.service;
 
 
-import com.example.demoinitial.auth.UserDetailsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AppUserDetailsServiceTest {
 
     @Autowired
-    AppUserDetailsService appUserDetailsService;
+    UserDetailsServiceImpl userDetailsService;
 
     @Test
     public void loadUser() {
-        UserDetailsImpl userDetailsImpl = (UserDetailsImpl)appUserDetailsService.loadUserByUsername("admin@example.com");
-        assertEquals(userDetailsImpl.getUsername(),"admin@example.com");
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername("admin@example.com");
+        assertEquals(userDetailsImpl.getUsername(),"admin");
 
     }
 }
