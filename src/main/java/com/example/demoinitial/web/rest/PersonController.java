@@ -24,7 +24,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = {"/api/persons"})
+@RequestMapping(value = "/api/persons")
 public class PersonController {
     private final PersonService personService;
 
@@ -58,7 +58,7 @@ public class PersonController {
     }
 
 
-    @GetMapping({"", "/"})
+    @GetMapping({"","/"})
     public List<Person> getPersons() {
         return personService.getAllPersons();
     }
@@ -74,7 +74,7 @@ public class PersonController {
     }
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Person> newPerson(@RequestBody Person person) {
+    public ResponseEntity<Person> newTodoItem(@RequestBody Person person) {
         return ResponseEntity.ok(personService.createPerson(person));
     }
 

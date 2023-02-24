@@ -10,8 +10,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+
 /**
  * Backend must be running
+ * BASIC AUTH not anymore supported on /api
+ * It will return a 401
  */
 public class RestClientBasicAuth implements HasLogger {
     public static void main(String[] args) {
@@ -20,7 +23,7 @@ public class RestClientBasicAuth implements HasLogger {
     public void start() {
         final String uri = "http://localhost:8080/api/persons/1";
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> request = new HttpEntity<String>(createHeaders("admin", "admin"));
+        HttpEntity<String> request = new HttpEntity<String>(createHeaders("admin@example.com", "admin"));
         ResponseEntity<Person> response = restTemplate.exchange(uri, HttpMethod.GET, request, Person.class);
         Person person = response.getBody();
         getLogger().info(person.toString());
@@ -30,7 +33,7 @@ public class RestClientBasicAuth implements HasLogger {
         return new HttpHeaders() {{
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(
-                    auth.getBytes(StandardCharsets.US_ASCII),false );
+                auth.getBytes(StandardCharsets.US_ASCII),false );
             String authHeader = "Basic " + new String( encodedAuth );
             set( "Authorization", authHeader );
         }};

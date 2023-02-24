@@ -1,6 +1,6 @@
 package com.example.demoinitial.client.websocket;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -33,10 +33,9 @@ public final class StompClientBasicAuth {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
         WebSocketHttpHeaders webSocketHeaders = createWebSocketHeaders("admin@example.com", "admin");
-        StompHeaders stompHeaders = createStompHeaders("admin@example.com", "admin");
         StompSessionHandler sessionHandler = new MyStompSessionHandler();
         String url = "ws://localhost:8080/broadcast";
-        stompClient.connectAsync(url, webSocketHeaders, stompHeaders, sessionHandler);
+        stompClient.connect(url, webSocketHeaders, sessionHandler);
         // Don't close immediately - Type <Enter> to exit
         new Scanner(System.in).nextLine();
     }
@@ -49,8 +48,6 @@ public final class StompClientBasicAuth {
 
     static StompHeaders createStompHeaders(String username, String password) {
         StompHeaders headers = new StompHeaders();
-        headers.add("login", username);
-        headers.add("passcode", password);
         headers.add("Authorization", getBase64Auth(username, password));
         return headers;
 
@@ -58,7 +55,7 @@ public final class StompClientBasicAuth {
 
     private static String getBase64Auth (String username, String password) {
         String auth = username + ":" + password;
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")),false);
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII), false);
 
         return "Basic " + new String(encodedAuth);
     }

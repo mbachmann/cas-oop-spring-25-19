@@ -62,15 +62,15 @@ public class PersonService {
         // get content for page object
         List<Person> content = persons.getContent();
 
-        PagedPersonsResponse pagedPersonsDto = new PagedPersonsResponse();
-        pagedPersonsDto.setContent(content);
-        pagedPersonsDto.setPageNo(persons.getNumber());
-        pagedPersonsDto.setPageSize(persons.getSize());
-        pagedPersonsDto.setTotalElements(persons.getTotalElements());
-        pagedPersonsDto.setTotalPages(persons.getTotalPages());
-        pagedPersonsDto.setLast(persons.isLast());
+        PagedPersonsResponse pagedPersonsResponse = new PagedPersonsResponse();
+        pagedPersonsResponse.setContent(content);
+        pagedPersonsResponse.setPageNo(persons.getNumber());
+        pagedPersonsResponse.setPageSize(persons.getSize());
+        pagedPersonsResponse.setTotalElements(persons.getTotalElements());
+        pagedPersonsResponse.setTotalPages(persons.getTotalPages());
+        pagedPersonsResponse.setLast(persons.isLast());
 
-        return pagedPersonsDto;
+        return pagedPersonsResponse;
     }
 
     public List<Person> getAllPersons(String firstName, String lastName) {

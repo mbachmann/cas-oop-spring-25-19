@@ -2,6 +2,7 @@ package com.example.demoinitial.client.websocket;
 
 import com.example.demoinitial.web.api.request.ChatMessageRequest;
 import com.example.demoinitial.utils.HasLogger;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -18,7 +19,7 @@ import java.lang.reflect.Type;
 public class MyStompSessionHandler extends StompSessionHandlerAdapter implements HasLogger {
 
     @Override
-    public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+    public void afterConnected(StompSession session, @Nullable StompHeaders connectedHeaders) {
         getLogger().info("New session established : " + session.getSessionId());
         session.subscribe("/topic/messages", this);
         getLogger().info("Subscribed to /topic/messages");
@@ -27,17 +28,17 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter implements
     }
 
     @Override
-    public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+    public void handleException(@Nullable StompSession session, StompCommand command, @Nullable StompHeaders headers, @Nullable byte[] payload, @Nullable Throwable exception) {
         getLogger().error("Got an exception", exception);
     }
 
     @Override
-    public Type getPayloadType(StompHeaders headers) {
+    public Type getPayloadType(@Nullable StompHeaders headers) {
         return ChatMessageRequest.class;
     }
 
     @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
+    public void handleFrame(@Nullable StompHeaders headers, Object payload) {
         ChatMessageRequest msg = (ChatMessageRequest) payload;
         getLogger().info("Received : " + msg.getText() + " from : " + msg.getFrom());
     }
