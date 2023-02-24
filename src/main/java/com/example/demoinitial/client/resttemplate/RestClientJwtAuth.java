@@ -4,8 +4,7 @@ import com.example.demoinitial.domain.Person;
 import com.example.demoinitial.utils.HasLogger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
-import org.springframework.web.util.WebUtils;
 
 /**
  * Backend must be running
