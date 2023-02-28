@@ -3,8 +3,6 @@ package com.example.demoinitial.client.resttemplate;
 import com.example.demoinitial.domain.Person;
 import com.example.demoinitial.utils.HasLogger;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -67,6 +65,5 @@ public class RestClientJwtAuth implements HasLogger {
     private String getJwtFromCookies(ResponseEntity<String> response) {
         HttpHeaders headers = response.getHeaders();
         return headers.getFirst(HttpHeaders.SET_COOKIE);
-
     }
 }

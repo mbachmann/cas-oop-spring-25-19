@@ -15,12 +15,12 @@ public class ExceptionHandlerAdvice {
                 .status(HttpStatus.NOT_FOUND)
                 .body("Error: " + e.getMessage());
     }
-
+/*
     @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<String> handlePersonNotFoundException(UserAlreadyExistException e) {
+    public ResponseEntity<String> handleUserAlreadyExistException(UserAlreadyExistException e) {
         // log exception
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body("Error: " + e.getMessage());
-    }
+    }*/
 }

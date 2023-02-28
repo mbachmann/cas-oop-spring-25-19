@@ -28,10 +28,10 @@ public class JwtUtils implements HasLogger {
     private int jwtExpirationMs;
 
     @Value("${app.jwtCookieName}")
-    private String jwtCookie;
+    private String jwtCookieName;
 
     public String getJwtFromCookies(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+        Cookie cookie = WebUtils.getCookie(request, jwtCookieName);
         if (cookie != null) {
             return cookie.getValue();
         } else {
@@ -41,11 +41,11 @@ public class JwtUtils implements HasLogger {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal);
-        return ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+        return ResponseCookie.from(jwtCookieName, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/api").build();
+        return ResponseCookie.from(jwtCookieName, null).path("/api").build();
     }
 
     public String getUserNameFromJwtToken(String token) {
