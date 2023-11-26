@@ -27,7 +27,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public abstract class AbstractMockMvcTest {
+public abstract class SharedMockMvcTest {
     protected MockMvc mvc;
     @Autowired
     WebApplicationContext webApplicationContext;

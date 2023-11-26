@@ -77,9 +77,11 @@ public class WebSecurityConfig {
         String[] permittedResources = new String[] {
             "/", "/static/**","/css/**","/js/**","/webfonts/**", "/webjars/**",
             "/index.html","/favicon.ico", "/error",
-            "/v3/**","/swagger-ui.html","/swagger-ui/**"
+            "/v3/**","/swagger-ui.html","/swagger-ui/**", "/actuator/**"
         };
         http
+            .headers().frameOptions().disable().and()
+            .csrf(AbstractHttpConfigurer::disable)
             .securityMatcher(permittedResources)
             .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
             .requestCache(RequestCacheConfigurer::disable)

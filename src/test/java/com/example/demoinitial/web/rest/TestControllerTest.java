@@ -2,14 +2,13 @@ package com.example.demoinitial.web.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-public class TestControllerTest extends AbstractMockMvcTest{
+public class TestControllerTest extends SharedMockMvcTest {
 
     String baseUri = "/api/test";
 
@@ -80,6 +79,4 @@ public class TestControllerTest extends AbstractMockMvcTest{
         String response = mvcResult.getResponse().getContentAsString();
         assertEquals("Admin Board.", response);
     }
-
-
 }
