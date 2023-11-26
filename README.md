@@ -2,6 +2,8 @@
 
 [https://github.zhaw.ch/bacn/cas-oop-spring-23-15](https://github.zhaw.ch/bacn/cas-oop-spring-23-15)
 
+Migration to Spring Boot 3.2.0
+
 ## Branches in this repository
 
 - le04-configuration-magic
