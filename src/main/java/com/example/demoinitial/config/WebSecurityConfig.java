@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SecurityContextConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,9 +37,9 @@ public class WebSecurityConfig {
         http
             .securityMatcher(permittedResources)
             .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
-            .requestCache().disable()
-            .securityContext().disable()
-            .sessionManagement().disable();
+            .requestCache(RequestCacheConfigurer::disable)
+            .securityContext(SecurityContextConfigurer::disable)
+            .sessionManagement(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
@@ -45,7 +48,7 @@ public class WebSecurityConfig {
     @Order(1)
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .headers().frameOptions().disable().and()
+            .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((requests) -> {
 
@@ -67,7 +70,7 @@ public class WebSecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/"));
 
-        http.headers(headers -> headers.frameOptions().sameOrigin());
+        http.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }
