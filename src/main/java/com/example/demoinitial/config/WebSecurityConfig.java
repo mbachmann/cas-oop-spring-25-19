@@ -80,7 +80,7 @@ public class WebSecurityConfig {
             "/v3/**","/swagger-ui.html","/swagger-ui/**", "/actuator/**"
         };
         http
-            .headers().frameOptions().disable().and()
+            .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
             .csrf(AbstractHttpConfigurer::disable)
             .securityMatcher(permittedResources)
             .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
