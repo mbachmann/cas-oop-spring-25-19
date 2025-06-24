@@ -2,7 +2,6 @@ package com.example.demoinitial.config;
 
 import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import com.example.demoinitial.security.AuthEntryPointJwt;
 import com.example.demoinitial.security.AuthTokenFilter;
@@ -34,7 +33,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(
     // securedEnabled = true,
     // jsr250Enabled = true,
-    prePostEnabled = true)
+)
 public class WebSecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -57,9 +56,7 @@ public class WebSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
-        authProvider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
@@ -101,12 +98,12 @@ public class WebSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers(OPTIONS).permitAll()
-                .requestMatchers(antMatcher("/api/auth/**")).permitAll()
-                .requestMatchers(antMatcher("/api/test/**")).permitAll()
-                .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.GET, "/actuator/**")).permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers("/api/persons/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                 .requestMatchers(
-                    antMatcher( "/h2-console/**")).permitAll()
+                    ( "/h2-console/**")).permitAll()
             ).authenticationProvider(authenticationProvider())
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -118,17 +115,14 @@ public class WebSecurityConfig {
         http
             .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests((requests) -> {
-
-                    requests
-                        .requestMatchers(OPTIONS).permitAll()
-                        .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
-                        .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
-                        .requestMatchers(antMatcher("/broadcast/**")).hasAnyRole("USER", "MODERATOR", "ADMIN")
-                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
-                        .anyRequest()
-                        .authenticated();
-                }
+            .authorizeHttpRequests((requests) -> requests
+				.requestMatchers(OPTIONS).permitAll()
+				.requestMatchers("/users/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+				.requestMatchers("/stomp-broadcast/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+				.requestMatchers("/broadcast/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+				.requestMatchers("/h2-console/**").permitAll()
+				.anyRequest()
+				.authenticated()
             );
 
         http
@@ -149,14 +143,7 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * webSecurityCustomizer does not use the filter chain. Spring Boot produces a warning:
-     * You are asking Spring Security to ignore Ant [pattern='/js/**', GET].
-     * This is not recommended -- please use
-     * permitAll via HttpSecurity#authorizeHttpRequests instead.
-     *
-     * @return
-     */
+
     /* @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
