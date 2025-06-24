@@ -54,10 +54,10 @@ public class WebSecurityConfig {
 
                     requests
                         .requestMatchers(OPTIONS).permitAll()
-                        .requestMatchers(antMatcher("/users/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher("/stomp-broadcast/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher("/api/persons/**")).hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/stomp-broadcast/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/persons/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest()
                         .authenticated();
                 }
