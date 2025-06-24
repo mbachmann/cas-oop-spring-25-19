@@ -2,8 +2,6 @@ package com.example.demoinitial.config;
 
 import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -95,19 +93,4 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * webSecurityCustomizer does not use the filter chain. Spring Boot produces a warning:
-     * You are asking Spring Security to ignore Ant [pattern='/js/**', GET].
-     * This is not recommended -- please use
-     * permitAll via HttpSecurity#authorizeHttpRequests instead.
-     *
-     * @return
-     */
-    /* @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-            .requestMatchers(antMatcher(HttpMethod.GET, ("/js/**")))
-            .requestMatchers(antMatcher(HttpMethod.GET, ("/css/**")))
-            .requestMatchers(antMatcher(HttpMethod.GET, ("/webfonts/**")));
-    }*/
 }
