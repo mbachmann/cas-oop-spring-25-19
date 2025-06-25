@@ -81,7 +81,7 @@ public class JwtUtils implements HasLogger {
             .claim("roles", userDetails.getAuthorities())
             .issuedAt(new Date())
             .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-            .signWith(getSigningKey())
+            .signWith(getSigningKey(), Jwts.SIG.HS256)
             .compact();
     }
 
