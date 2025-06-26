@@ -1,6 +1,6 @@
-# Education repository for spring boot introduction to CAS-OOP-23-15
+# Education repository for spring boot introduction to CAS-OOP-25-19
 
-[https://github.zhaw.ch/bacn/cas-oop-spring-23-15](https://github.zhaw.ch/bacn/cas-oop-spring-23-15)
+[https://github.zhaw.ch/bacn/cas-oop-spring-25-19](https://github.zhaw.ch/bacn/cas-oop-spring-25-19)
 
 
 ## Branches in this repository
