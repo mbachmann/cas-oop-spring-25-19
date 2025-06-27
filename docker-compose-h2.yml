@@ -1,0 +1,12 @@
+
+services:
+
+  demo-initial-h2:
+    image: uportal/demo-initial:latest
+    container_name: demo-initial-on-h2
+    restart: unless-stopped
+    environment:
+      APP_NAME: Demo Initial with H2
+      ACTIVE_PROFILES: dev,h2
+    ports:
+      - 8080:8080
