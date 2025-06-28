@@ -1,6 +1,3 @@
-/*
- * Copyright (C) Schweizerische Bundesbahnen SBB, 2022.
- */
 
 package com.example.demoinitial.config;
 

@@ -55,17 +55,9 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
 
     @Bean
     @Order(0)
@@ -103,8 +95,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                 .requestMatchers(
                     ( "/h2-console/**")).permitAll()
-            ).authenticationProvider(authenticationProvider())
-            .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+            ).addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -132,7 +123,6 @@ public class WebSecurityConfig {
                 .logoutSuccessUrl("/"));
 
         http.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
-        http.authenticationProvider(authenticationProvider());
 
         return http.build();
     }
