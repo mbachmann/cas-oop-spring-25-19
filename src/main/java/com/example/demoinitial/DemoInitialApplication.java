@@ -30,22 +30,33 @@ public class DemoInitialApplication implements HasLogger {
         boolean hasDevProfile = Arrays.asList(env.getActiveProfiles()).contains("dev");
         boolean hasH2Database = Arrays.asList(env.getActiveProfiles()).contains("h2");
         String applicationName = env.getProperty("spring.application.name");
-        String openApiInfo="";
-        String h2ConsoleInfo="";
+        String appUrl = env.getProperty("app.server");
+        String swaggerHtml = env.getProperty("springdoc.swagger-ui.path");
+        String swaggerUrl = env.getProperty("springdoc.swagger-ui.url");
+
+        String openApiInfo = "";
+        String h2ConsoleInfo = "";
+        String actuatorInfo =
+                appUrl + "/actuator/info" + System.lineSeparator() +
+                appUrl + "/actuator/health" + System.lineSeparator() +
+                appUrl + "/actuator/health/readiness" + System.lineSeparator() +
+                appUrl + "/actuator/health/liveness" + System.lineSeparator() +
+                "";
         if (hasDevProfile) {
-            openApiInfo = """
-                    http://localhost:8080/v3/api-docs
-                    http://localhost:8080/v3/api-docs.yaml -> yaml file is downloaded -> https://editor.swagger.io/
-                    http://localhost:8080/swagger-ui.html\s
-                    """;
+            openApiInfo = "" +
+                    appUrl + swaggerUrl + System.lineSeparator() +
+                    appUrl + swaggerUrl + ".yaml -> yaml file is downloaded -> https://editor.swagger.io/" + System.lineSeparator() +
+                    appUrl + swaggerHtml + System.lineSeparator() +
+                    "";
         }
         if (hasH2Database) {
-            h2ConsoleInfo= "http://localhost:8080/h2-console  " + "" +
+            h2ConsoleInfo = appUrl + "/h2-console  " + "" +
                     "-> mit Generic H2 (Embedded), org.h2.Driver, jdbc:h2:mem:testdb und sa \n";
         }
-        System.out.println("\n\nApplication [" + applicationName + "] - Enter in Browser:\nhttp://localhost:8080 \n" +
+        System.out.println("\n\nApplication [" + applicationName + "] - Enter in Browser:\n" + appUrl + "\n" +
                 openApiInfo +
                 h2ConsoleInfo + "\n" +
+                actuatorInfo + "\n" +
                 "Active Profiles: " + Arrays.toString(env.getActiveProfiles()) + "\n\n");
     }
 
