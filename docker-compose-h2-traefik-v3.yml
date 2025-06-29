@@ -19,4 +19,8 @@ services:
     environment:
       APP_NAME: Demo Initial with Spring Boot and H2
       ACTIVE_PROFILES: dev,h2
-      APP_URL: https://demo-initial-h2.example.com # change hostname!
+      APP_URL: https://demo-initial-h2.example.com
+      JWT_COOKIE_NAME: starter
+      JWT_SHARED_SECRET: secretKeyWithAtLeast32Characters
+      ALLOWED_ORIGINS: https://angular-20-jwt-auth.example.com,https://demo-initial-h2.example.com,http://localhost:4000, http://localhost:4200, http://localhost:4100,http://localhost:8080
+      # change hostname!

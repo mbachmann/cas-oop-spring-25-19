@@ -8,5 +8,9 @@ services:
     environment:
       APP_NAME: Demo Initial with H2
       ACTIVE_PROFILES: dev,h2
+      APP_URL: http://localhost:8080
+      JWT_COOKIE_NAME: starter
+      JWT_SHARED_SECRET: secretKeyWithAtLeast32Characters
+      ALLOWED_ORIGINS: http://localhost:4000, http://localhost:4200, http://localhost:4100, http://localhost:8080
     ports:
       - 8080:8080
