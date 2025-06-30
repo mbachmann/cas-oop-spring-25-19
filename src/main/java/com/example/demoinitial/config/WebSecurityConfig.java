@@ -34,7 +34,9 @@ public class WebSecurityConfig {
         };
         http
             .securityMatcher(permittedResources)
-            .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
+            .authorizeHttpRequests((
+                    authorize) -> authorize.anyRequest().permitAll()
+            )
             .requestCache(RequestCacheConfigurer::disable)
             .securityContext(SecurityContextConfigurer::disable)
             .sessionManagement(AbstractHttpConfigurer::disable);
@@ -46,7 +48,9 @@ public class WebSecurityConfig {
     @Order(1)
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
+            .headers(
+                    headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin)
+            )
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((requests) -> {
 
@@ -68,7 +72,8 @@ public class WebSecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/"));
 
-        http.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
+        http.headers(headers ->
+                             headers.frameOptions(FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }
@@ -81,10 +86,18 @@ public class WebSecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user").password(passwordEncoder().encode("user")).roles("USER").build());
-        manager.createUser(User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
-        manager.createUser(User.withUsername("admin@example.com").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
-        manager.createUser(User.withUsername("admin@admin.ch").password(passwordEncoder().encode("admin")).roles("ADMIN", "USER").build());
+        manager.createUser(User.withUsername("user")
+                               .password(passwordEncoder().encode("user"))
+                               .roles("USER").build());
+        manager.createUser(User.withUsername("admin")
+                               .password(passwordEncoder().encode("admin"))
+                               .roles("ADMIN", "USER").build());
+        manager.createUser(User.withUsername("admin@example.com")
+                               .password(passwordEncoder().encode("admin"))
+                               .roles("ADMIN", "USER").build());
+        manager.createUser(User.withUsername("admin@admin.ch")
+                               .password(passwordEncoder().encode("admin"))
+                               .roles("ADMIN", "USER").build());
         return manager;
     }
 
