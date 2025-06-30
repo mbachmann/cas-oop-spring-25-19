@@ -15,7 +15,9 @@ import com.example.demoinitial.repository.PersonRepository;
 import com.example.demoinitial.repository.ProjectRepository;
 import com.example.demoinitial.repository.UserRepository;
 import com.example.demoinitial.utils.HasLogger;
+import jakarta.annotation.PostConstruct;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +25,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -82,23 +83,17 @@ public class DevConfiguration implements HasLogger {
         createEmployeeMaxMustermann();
         assignMaxMustermannToDesignProject();
         assignMaxMustermannAsChef();
-
-        createUserData();
-
     }
 
-    private void createUserData() {
-        createUserIfNotFound("Felix Muster", "felix.muster@example.com", "felix");
-    }
 
     @Transactional
-    User createUserIfNotFound(String name, String eMail, String password) {
+    User createUserIfNotFound(String name, String eMail) {
 
         Optional<User> user = userRepository.findByEmail(eMail);
         if (user.isPresent()) {
             return user.get();
         } else {
-            User newUser = new User(name, eMail, password);
+            User newUser = new User(name, eMail);
             return userRepository.save(newUser);
         }
     }

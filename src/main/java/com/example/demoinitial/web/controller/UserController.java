@@ -1,9 +1,12 @@
 package com.example.demoinitial.web.controller;
 
-
+import com.example.demoinitial.domain.Role;
 import com.example.demoinitial.domain.User;
+import com.example.demoinitial.domain.enums.ERole;
+import com.example.demoinitial.repository.RoleRepository;
 import com.example.demoinitial.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,12 +23,14 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserRepository userRepository;
-
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/list")
@@ -40,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/adduser")
-    public String addUser(@Valid User user, BindingResult result)  {
+    public String addUser(@Valid User user, BindingResult result, Model model) throws Exception {
         if (result.hasErrors()) {
             return "add-user";
         }
@@ -55,8 +60,12 @@ public class UserController {
             result.rejectValue("username", "User name already exists", "User name already exists");
             return "add-user";
         }
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() ->
+            new Exception("userRole not found")
+        );
 
-        user.setPassword(user.getPassword());
+        user.getRoles().add(userRole);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "redirect:/users/list";
     }
@@ -99,14 +108,14 @@ public class UserController {
             }
         }
 
-        user.setPassword(updatedUser.getPassword());
+        user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         userRepository.save(user);
 
         return "redirect:/users/list";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    public String deleteUser(@PathVariable("id") long id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
 

@@ -42,7 +42,9 @@ public class CorsConfig {
         config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(allowedMethods);
         config.setAllowedHeaders(allowedHeaders);
-        source.registerCorsConfiguration("/**", config);
+        config.setAllowCredentials(true);
+        config.setMaxAge(60L);
+        source.registerCorsConfiguration(pathMappings, config);
         return new CorsFilter(source);
     }
 

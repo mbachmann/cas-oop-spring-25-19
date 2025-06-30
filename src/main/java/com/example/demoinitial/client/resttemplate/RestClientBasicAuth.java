@@ -10,12 +10,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.Charset;
-
-
 
 /**
  * Backend must be running
+ * BASIC AUTH not anymore supported on /api
+ * It will return a 401
  */
 public class RestClientBasicAuth implements HasLogger {
     public static void main(String[] args) {
@@ -34,7 +33,7 @@ public class RestClientBasicAuth implements HasLogger {
         return new HttpHeaders() {{
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(
-                    auth.getBytes(StandardCharsets.US_ASCII),false );
+                auth.getBytes(StandardCharsets.US_ASCII),false );
             String authHeader = "Basic " + new String( encodedAuth );
             set( "Authorization", authHeader );
         }};

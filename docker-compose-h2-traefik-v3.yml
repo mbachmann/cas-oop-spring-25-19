@@ -1,0 +1,22 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  demo-initial-h2:
+    image: uportal/todo-app:latest
+    container_name: demo-initial-on-h2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.todo-h2.rule=Host(`demo-initial-h2.example.com`)" # change hostname!
+      - "traefik.http.routers.todo-h2.tls=true"
+      - "traefik.http.routers.todo-h2.tls.certresolver=lets-encrypt"
+      - "traefik.http.routers.todo-h2.entrypoints=websecure"
+      - "traefik.http.services.todo-h2.loadbalancer.server.port=8080"
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      APP_NAME: Demo Initial with Spring Boot and H2
+      ACTIVE_PROFILES: dev,h2
+      APP_URL: https://demo-initial-h2.example.com # change hostname!
