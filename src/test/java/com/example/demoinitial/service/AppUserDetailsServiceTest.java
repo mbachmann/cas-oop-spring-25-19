@@ -16,7 +16,7 @@ public class AppUserDetailsServiceTest {
     @Test
     public void loadUser() {
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername("admin@example.com");
-        assertEquals(userDetailsImpl.getUsername(),"admin");
+        assertEquals("admin", userDetailsImpl.getUsername());
 
     }
 }
