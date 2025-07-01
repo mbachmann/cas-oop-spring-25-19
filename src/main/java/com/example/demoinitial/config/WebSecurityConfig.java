@@ -34,9 +34,7 @@ public class WebSecurityConfig {
         };
         http
             .securityMatcher(permittedResources)
-            .authorizeHttpRequests((
-                    authorize) -> authorize.anyRequest().permitAll()
-            )
+            .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
             .requestCache(RequestCacheConfigurer::disable)
             .securityContext(SecurityContextConfigurer::disable)
             .sessionManagement(AbstractHttpConfigurer::disable);
@@ -72,8 +70,7 @@ public class WebSecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/"));
 
-        http.headers(headers ->
-                             headers.frameOptions(FrameOptionsConfig::sameOrigin));
+        http.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }
